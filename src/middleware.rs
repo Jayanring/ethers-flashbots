@@ -392,7 +392,7 @@ impl<M: Middleware, S: Signer> BroadcasterMiddleware<M, S> {
             inner,
             relays: relay_urls
                 .into_iter()
-                .map(|r| Relay::new(r, Some(relay_signer.clone())))
+                .map(|r| Relay::new(r, None))
                 .collect(),
             simulation_relay: Relay::new(simulation_relay, Some(relay_signer)),
         }
