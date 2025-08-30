@@ -381,28 +381,21 @@ impl<M: Middleware, S: Signer> BroadcasterMiddleware<M, S> {
     /// The signer is used to sign requests to the relay.
     pub fn new(
         inner: M,
-        relay_urls: Vec<Url>,
+        relay_urls_with_signer: Vec<(Url, Option<S>)>,
         simulation_relay: impl Into<Url>,
-        relay_signer: S,
     ) -> Self
     where
         S: Clone,
     {
         Self {
             inner,
-            relays: relay_urls
+            relays: relay_urls_with_signer
                 .into_iter()
-                .map(|r| {
-                    if r.as_str().contains("relay.flashbots.net")
-                        || r.as_str().contains("rpc.buildernet.org")
-                    {
-                        Relay::new(r, Some(relay_signer.clone()))
-                    } else {
-                        Relay::new(r, None)
-                    }
+                .map(|(relay_url, signer)| {
+                        Relay::new(relay_url, signer)
                 })
                 .collect(),
-            simulation_relay: Relay::new(simulation_relay, Some(relay_signer)),
+            simulation_relay: Relay::new(simulation_relay, None),
         }
     }
 
