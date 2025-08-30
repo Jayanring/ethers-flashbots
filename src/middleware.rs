@@ -393,7 +393,9 @@ impl<M: Middleware, S: Signer> BroadcasterMiddleware<M, S> {
             relays: relay_urls
                 .into_iter()
                 .map(|r| {
-                    if r.as_str().contains("relay.flashbots.net") {
+                    if r.as_str().contains("relay.flashbots.net")
+                        || r.as_str().contains("rpc.buildernet.org")
+                    {
                         Relay::new(r, Some(relay_signer.clone()))
                     } else {
                         Relay::new(r, None)
